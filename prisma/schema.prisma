@@ -16,6 +16,7 @@ model User {
 
   password Password?
   notes    Note[]
+  keyboards Keyboard[]
 }
 
 model Password {
@@ -34,5 +35,17 @@ model Note {
   updatedAt DateTime @updatedAt
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+}
+
+model Keyboard {
+  id String @id @default(cuid())
+  name String
+  description String
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 }

@@ -3,37 +3,36 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-import { deleteNote, getNote } from "~/models/note.server";
+import { deleteKeyboard, getKeyboard } from "~/models/keyboard.server";
 import { requireUserId } from "~/session.server";
 
 export async function loader({ request, params }: LoaderArgs) {
   const userId = await requireUserId(request);
-  console.log('params', params);
-  invariant(params.noteId, "noteId not found");
+  invariant(params.keyboardId, "keyboardId not found");
 
-  const note = await getNote({ userId, id: params.noteId });
-  if (!note) {
+  const keyboard = await getKeyboard({ userId, id: params.keyboardId });
+  if (!keyboard) {
     throw new Response("Not Found", { status: 404 });
   }
-  return json({ note });
+  return json({ keyboard });
 }
 
 export async function action({ request, params }: ActionArgs) {
   const userId = await requireUserId(request);
-  invariant(params.noteId, "noteId not found");
+  invariant(params.keyboardId, "keyboardId not found");
 
-  await deleteNote({ userId, id: params.noteId });
+  await deleteKeyboard({ userId, id: params.keyboardId });
 
-  return redirect("/notes");
+  return redirect("/keyboards");
 }
 
-export default function NoteDetailsPage() {
+export default function KeyboardDetailsPage() {
   const data = useLoaderData<typeof loader>();
 
   return (
     <div>
-      <h3 className="text-2xl font-bold">{data.note.title}</h3>
-      <p className="py-6">{data.note.body}</p>
+      <h3 className="text-2xl font-bold">{data.keyboard.name}</h3>
+      <p className="py-6">{data.keyboard.description}</p>
       <hr className="my-4" />
       <Form method="post">
         <button

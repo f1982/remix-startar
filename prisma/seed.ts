@@ -40,6 +40,14 @@ async function seed() {
     },
   });
 
+  await prisma.keyboard.create({
+    data: {
+      name: "Keychron K7",
+      description: "This is small keyboard",
+      userId: user.id,
+    },
+  });
+
   console.log(`Database has been seeded. 🌱`);
 }
 
